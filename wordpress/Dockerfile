@@ -1,5 +1,4 @@
-ARG tag=php8.1-fpm
-
+ARG tag=php8.1-apache
 FROM wordpress:${tag} AS custom
 
 WORKDIR /usr/src/wordpress
@@ -14,11 +13,11 @@ RUN set -eux; \
 COPY --from=custom /usr/src/wordpress/wp-content/themes/custom-theme/ ./wp-content/themes/custom-theme/
 COPY --from=custom /usr/src/wordpress/wp-content/plugins/custom-plugin/ ./wp-content/themes/plugins/custom-plugin/
 
-WORKDIR /var/www
+# WORKDIR /var/www
 
-COPY entrypoint.sh /entrypoint.sh
-COPY common.sh /common.sh
+# COPY entrypoint.sh /entrypoint.sh
+# COPY common.sh /common.sh
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+# ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD [ "php-fpm" ]
+# CMD [ "php-fpm" ]
