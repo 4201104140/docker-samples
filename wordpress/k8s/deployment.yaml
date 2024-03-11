@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wordpress-mysql
+  # Dùng để liên kết với selector của service: danh sách selector là con của danh sách labels.
+  labels:
+    app.kubernetes.io/name: wordpress-mysql
+spec:
+  containers:
+  - name: wordpress
+    image: wordpress
+    env:
+    - name: WORDPRESS_DB_HOST
+      value: "localhost"
+    - name: WORDPRESS_DB_USER
+      value: "exampleuser"
+    - name: WORDPRESS_DB_PASSWORD
+      value: "examplepass"
+    - name: WORDPRESS_DB_NAME
+      value: "exampledb"            
+    ports:
+    - containerPort: 80
+      name: http
+    volumeMounts:
+    - name: wordpress
+      mountPath: "/var/www/html"
+  - name: db
+    image: mysql:8.0
+    env:
+    - name: MYSQL_DATABASE
+      value: "exampledb"
+    - name: MYSQL_USER
+      value: "exampleuser"
+    - name: MYSQL_PASSWORD
+      value: "examplepass"
+    - name: MYSQL_RANDOM_ROOT_PASSWORD
+      value: "1"     
+    # ports:
+    # - containerPort: 3306
+    #   # name: 
+    # - containerPort: 33060
+    #   # name:
+    volumeMounts:
+    - name: db
+      mountPath: "/var/lib/mysql"
+  volumes:
+  - name: wordpress
+    emptyDir: {}
+  - name: db
+    emptyDir: {}    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-mysql
+spec:
+  selector:
+    app.kubernetes.io/name: php-mysql
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80 # http 
+    # - protocol: TCP
+    #   port: 3306
+    #   targetPort: 3306 # http 
+    # - protocol: TCP
+    #   port: 33060
+    #   targetPort: 33060 # http             
