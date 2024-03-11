@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # Số lượng bản sao được tạo ra
+  replicas: 3
+  selector:
+  # Tác động với các pod có cấu hình labels chứa danh sách này
+    matchLabels:
+      tier: frontend
+  # Thông tin 1 pod
+  template:
+    metadata:
+      # danh sách thông tin để các workload, thành phần khác của kubernetes try vấn
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5

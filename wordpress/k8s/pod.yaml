@@ -1,26 +1,33 @@
 apiVersion: v1
 kind: Pod
 metadata:
+  # Tên của Object loại pod
   name: wordpress-mysql
   # Dùng để liên kết với selector của service: danh sách selector là con của danh sách labels.
   labels:
     app.kubernetes.io/name: wordpress-mysql
 spec:
+  # Danh sách container
   containers:
+    # Tên của container
   - name: wordpress
+    # image được sử dụng trong container
     image: wordpress
+    # danh sách các biến môi trường
     env:
     - name: WORDPRESS_DB_HOST
-      value: "localhost"
+      value: "127.0.0.1"
     - name: WORDPRESS_DB_USER
       value: "exampleuser"
     - name: WORDPRESS_DB_PASSWORD
       value: "examplepass"
     - name: WORDPRESS_DB_NAME
-      value: "exampledb"            
+      value: "exampledb"
+    # danh sách các port            
     ports:
     - containerPort: 80
       name: http
+    # sanh sách thông tin sử dụng volume
     volumeMounts:
     - name: wordpress
       mountPath: "/var/www/html"
@@ -35,9 +42,9 @@ spec:
       value: "examplepass"
     - name: MYSQL_RANDOM_ROOT_PASSWORD
       value: "1"     
-    # ports:
-    # - containerPort: 3306
-    #   # name: 
+    ports:
+    - containerPort: 3306
+      # name: 
     # - containerPort: 33060
     #   # name:
     volumeMounts:
@@ -52,17 +59,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: php-mysql
+  name: wordpress-mysql
 spec:
   selector:
-    app.kubernetes.io/name: php-mysql
+    app.kubernetes.io/name: wordpress-mysql
   ports:
     - protocol: TCP
-      port: 8080
+      port: 8081
       targetPort: 80 # http 
-    # - protocol: TCP
-    #   port: 3306
-    #   targetPort: 3306 # http 
-    # - protocol: TCP
-    #   port: 33060
-    #   targetPort: 33060 # http             
+  # clusterIP: x.x.x.x
+  type: LoadBalancer
