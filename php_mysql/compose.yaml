@@ -1,0 +1,26 @@
+services:
+  php:
+    build:
+      context: src
+    environment:
+      DB_HOST: db
+      DB_USERNAME: exampleuser
+      DB_PASSWORD: examplepass
+      DB_DATABASE: shop
+    ports: 
+      - '80:80'
+    # volumes:
+    #   - ./app:/var/www/html/
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'examplepass'
+      MYSQL_DATABASE: shop
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+    command: '--default-authentication-plugin=mysql_native_password'
+#     volumes:
+#       - db:/var/lib/mysql
+# volumes:
+#   db:
